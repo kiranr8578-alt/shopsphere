@@ -9,8 +9,10 @@ import com.shopsphere.repository.OrderRepository;
 import com.shopsphere.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
+    @Transactional
     public Order createOrderFromCart(Long userId, Long cartId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -48,7 +51,7 @@ public class OrderService {
 
         double total = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
         order.setTotalPrice(total);
-        order.setItems(new HashSet<>(orderItems));
+        order.setItems(new ArrayList<>(orderItems));
 
         return orderRepository.save(order);
     }

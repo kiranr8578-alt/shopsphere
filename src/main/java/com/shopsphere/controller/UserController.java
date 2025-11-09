@@ -1,6 +1,7 @@
 package com.shopsphere.controller;
 
 import com.shopsphere.entity.User;
+import com.shopsphere.entity.UserDTO;
 import com.shopsphere.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<User> getAll() {
+    public List<UserDTO> getAll() {
         return userService.getAllUsers();
     }
 

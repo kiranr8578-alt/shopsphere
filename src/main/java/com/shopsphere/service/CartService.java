@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @Service
 public class CartService {
@@ -35,7 +36,7 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Cart cart = new Cart();
         cart.setUser(user);
-        cart.setItems(new ArrayList<>());
+        cart.setItems(new HashSet<>());
         cart.setTotalPrice(0.0);
         return cartRepository.save(cart);
     }

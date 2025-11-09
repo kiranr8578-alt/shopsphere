@@ -1,6 +1,7 @@
 package com.shopsphere.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Table(name = "carts")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Cart {
 
         @Id
@@ -21,11 +23,13 @@ public class Cart {
         // Each cart belongs to one user
         @ManyToOne
         @JoinColumn(name = "user_id")
+        @JsonIgnoreProperties({"carts", "orders"})
         private User user;
 
         // A cart can have multiple cart items
         @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-        private List<CartItem> items;
+        @JsonIgnoreProperties("cart")
+        private Set<CartItem> items;
 
         private Double totalPrice;
     }
