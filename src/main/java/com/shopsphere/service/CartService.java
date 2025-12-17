@@ -4,16 +4,21 @@ import com.shopsphere.entity.Cart;
 import com.shopsphere.entity.CartItem;
 import com.shopsphere.entity.Product;
 import com.shopsphere.entity.User;
+import com.shopsphere.exception.CartNotFoundException;
 import com.shopsphere.repository.CartRepository;
 import com.shopsphere.repository.ProductRepository;
 import com.shopsphere.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
+@Slf4j
 @Service
+@Transactional
 public class CartService {
     @Autowired
     private CartRepository cartRepository;
@@ -24,9 +29,11 @@ public class CartService {
     @Autowired
     private  UserRepository userRepository;
 
+
     public Cart getCart(Long cartId) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+                .orElseThrow(() -> new CartNotFoundException("No Cart found  wih id ",cartId));
+        log.info("Cart Not found");
         cart.getItems().size(); // initialize lazy list
         return cart;
     }
@@ -36,7 +43,8 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Cart cart = new Cart();
         cart.setUser(user);
-        cart.setItems(new HashSet<>());
+//        cart.setItems(new HashSet<>());
+        cart.setItems(new ArrayList<>());
         cart.setTotalPrice(0.0);
         return cartRepository.save(cart);
     }
@@ -60,7 +68,7 @@ public class CartService {
             item.setQuantity(quantity);
             item.setPrice(product.getPrice() * quantity);
             item.setCart(cart);
-            cart.getItems().add(item);
+           cart.getItems().add(item);
         }
 
         updateTotal(cart);

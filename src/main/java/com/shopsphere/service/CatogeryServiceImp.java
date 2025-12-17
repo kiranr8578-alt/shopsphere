@@ -31,11 +31,14 @@ public class CatogeryServiceImp implements CategoryService{
     @Transactional(readOnly = true)
     public Category getCategoryById(Long id) {
 //        Category category = categoryMapper.getCategoryById(id);
-        Category category = categoryRepository.findById(id)
-               .orElseThrow(() -> new RuntimeException("Category not found"));
-
+        //
+        // Category category = categoryRepository.findById(id)
+             //  .orElseThrow(() -> new RuntimeException("Category not found"));
+Category category = categoryRepository.getBycategory(id)
+         .orElseThrow(() -> new RuntimeException("Category not found"));
         // Force initialize products (to load before session closes)
         category.getProducts().size();
+
 //        List<ProductDTO> products = category.getProducts().stream()
 //                .map(p -> new ProductDTO(p.getId(), p.getName(), p.getDescription(),p.getPrice(), p.getStock()))
 //                .toList();
@@ -48,7 +51,7 @@ public class CatogeryServiceImp implements CategoryService{
     public Category createCategory(Category category) {
         if (category.getProducts() != null) {
             for (Product product : category.getProducts()) {
-                product.setCategory(category); // 👈 link back to the parent
+                product.setCategory(category);
 
             }
         }

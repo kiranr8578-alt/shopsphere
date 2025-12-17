@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,8 @@ public class UserService {
 
     @Autowired
     private final UserRepository userRepository;
+
+
 
     @Transactional(readOnly = true)
     public List<UserDTO> getAllUsers() {
@@ -35,13 +38,17 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
+
     }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
-
+   private BCryptPasswordEncoder passwordEncoder() {
+  return new BCryptPasswordEncoder();
+   }
 
 }

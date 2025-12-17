@@ -21,7 +21,7 @@ public class UserDTO {
         return new UserDTO(
                 user.getId(),
                 user.getUsername(),
-                user.getEmail()
+                user.getPassword()
         );
     }
 }

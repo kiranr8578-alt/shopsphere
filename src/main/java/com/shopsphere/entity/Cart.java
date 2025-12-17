@@ -29,7 +29,7 @@ public class Cart {
         // A cart can have multiple cart items
         @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
         @JsonIgnoreProperties("cart")
-        private Set<CartItem> items;
+        private List<CartItem> items;
 
         private Double totalPrice;
     }

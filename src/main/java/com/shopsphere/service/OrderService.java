@@ -49,6 +49,7 @@ public class OrderService {
             return oi;
         }).toList();
 
+
         double total = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
         order.setTotalPrice(total);
         order.setItems(new ArrayList<>(orderItems));
