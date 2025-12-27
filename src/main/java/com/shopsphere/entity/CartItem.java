@@ -32,17 +32,17 @@ public class CartItem {
 
     private Double price; // price = product.price * quantity
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof CartItem)) return false;
-        CartItem that = (CartItem) o;
-        return Objects.equals(cart, that.cart) &&
-                Objects.equals(product, that.product);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(cart, product);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof CartItem)) return false;
+//        CartItem that = (CartItem) o;
+//        return Objects.equals(cart, that.cart) &&
+//                Objects.equals(product, that.product);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(cart, product);
+//    }
 }

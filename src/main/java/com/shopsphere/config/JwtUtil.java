@@ -1,6 +1,6 @@
 package com.shopsphere.config;
 
-
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -16,17 +16,17 @@ public class JwtUtil {
     private final String SECRET = "my-super-secret-key-which-is-at-least-32chars!"; // use env variable in real apps
 
     public String generateToken(String username) {
-//        Map<String, Object> claims = new HashMap<>();
-//        List<String> roles = new ArrayList<>();
-//        if (userDetails.getUsername().equalsIgnoreCase("admin")) {
-//            roles.add("ROLE_ADMIN");
-//        } else {
-//            roles.add("ROLE_USER");
-//        }
+        Map<String, Object> claims = new HashMap<>();
+        List<String> roles = new ArrayList<>();
+        if (username.equalsIgnoreCase("admin")) {
+            roles.add("ROLE_ADMIN");
+        } else {
+            roles.add("ROLE_USER");
+        }
 
-//        claims.put("roles", roles);
+        claims.put("roles", roles);
         return Jwts.builder()
-
+                .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hour
@@ -43,11 +43,11 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    public boolean validateToken(String token,UserDetails userDetails) {
-        String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-
-    }
+//    public boolean validateToken(String token,UserDetails userDetails) {
+//        String username = extractUsername(token);
+//        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+//
+//    }
 
     private boolean isTokenExpired(String token) {
         Date expiration = Jwts.parserBuilder()
@@ -59,7 +59,13 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-
+    public Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
 
     }
