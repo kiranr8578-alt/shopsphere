@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
 import java.util.Set;
@@ -26,6 +27,8 @@ public class Cart {
         @JsonIgnoreProperties({"carts", "orders"})
         private User user;
 
+        @NonNull
+        private String status;
         // A cart can have multiple cart items
         @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
         @JsonIgnoreProperties("cart")

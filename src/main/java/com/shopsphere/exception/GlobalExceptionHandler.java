@@ -32,4 +32,9 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage()+ex.getCartID()
                         );
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public String handleException(RuntimeException ex) {
+        return ex.getMessage();
+    }
 }

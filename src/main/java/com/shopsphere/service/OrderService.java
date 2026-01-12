@@ -1,9 +1,6 @@
 package com.shopsphere.service;
 
-import com.shopsphere.entity.Cart;
-import com.shopsphere.entity.Order;
-import com.shopsphere.entity.OrderItem;
-import com.shopsphere.entity.User;
+import com.shopsphere.entity.*;
 import com.shopsphere.repository.CartRepository;
 import com.shopsphere.repository.OrderRepository;
 import com.shopsphere.repository.UserRepository;
@@ -34,7 +31,10 @@ public class OrderService {
 
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
-
+        if(cart.getStatus().equals("ORDERED")){
+            throw new RuntimeException("Order already in progress");
+        }
+        List<CartItem> cartItems = cart.getItems();
         Order order = new Order();
         order.setUser(user);
         order.setStatus("PENDING");
@@ -53,7 +53,10 @@ public class OrderService {
         double total = orderItems.stream().mapToDouble(OrderItem::getPrice).sum();
         order.setTotalPrice(total);
         order.setItems(new ArrayList<>(orderItems));
-
+        cart.setStatus("ORDERED");
+        cartItems.forEach(cartItem -> {
+           cartItem.getProduct().setStock(cartItem.getProduct().getStock() - cartItem.getQuantity());
+        });
         return orderRepository.save(order);
     }
 
@@ -72,6 +75,7 @@ public class OrderService {
     public void updateStatus(Long id, String status) {
         Order order = getOrder(id);
         order.setStatus(status);
+
         orderRepository.save(order);
     }
 }
